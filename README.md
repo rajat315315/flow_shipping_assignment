@@ -21,7 +21,13 @@ This system is designed to manage the shipping of orders for Flow Shipping Co. I
     ```
 
 4. Create the database tables:
-    ```mysql -u root -p < astro.sql
+    ```
+    mysql -u root -p < astro.sql
+    ```
+
+5. Run fake_data.py to create some fake data.
+    ```
+    python fake_data.py
     ```
 
 ## Usage
