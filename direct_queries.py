@@ -7,8 +7,8 @@ def create_connection():
     try:
         connection = mysql.connector.connect(
             host='localhost',
-            user='root',
-            password='password',
+            user='rajat',
+            password='rajat',
             database='flow_shipping'
         )
         if connection.is_connected():
@@ -19,32 +19,32 @@ def create_connection():
 
 def get_available_carriers(connection):
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM Carriers")
+    cursor.execute("SELECT * FROM carriers")
     return cursor.fetchall()
 
 def get_orders_to_ship(connection):
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM Orders WHERE shipped = False")
+    cursor.execute("SELECT * FROM orders WHERE shipped = False")
     return cursor.fetchall()
 
 def assign_carrier_to_order(connection, order_id, carrier_id):
     cursor = connection.cursor()
-    cursor.execute("INSERT INTO Orders (order_id, carrier_id, status) VALUES (%s, %s, %s)", (order_id, carrier_id, 'assigned'))
+    cursor.execute("INSERT INTO orders (order_id, carrier_id, status) VALUES (%s, %s, %s)", (order_id, carrier_id, 'assigned'))
     connection.commit()
 
 def mark_order_as_shipped(connection, order_id):
     cursor = connection.cursor()
-    cursor.execute("UPDATE Orders SET status = 'shipped' WHERE order_id = %s", (order_id,))
+    cursor.execute("UPDATE orders SET status = 'shipped' WHERE order_id = %s", (order_id,))
     connection.commit()
 
 def get_orders_by_carrier(connection, carrier_id):
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM Orders WHERE carrier_id = %s", (carrier_id,))
+    cursor.execute("SELECT * FROM orders WHERE carrier_id = %s", (carrier_id,))
     return cursor.fetchall()
 
 def assign_most_economical_carrier(connection, order):
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM Carriers ORDER BY cost_per_order ASC")
+    cursor.execute("SELECT * FROM carriers ORDER BY cost_per_order ASC")
     carriers = cursor.fetchall()
     for carrier in carriers:
         cursor.execute("SELECT SUM(quantity) as total_items FROM Orders WHERE order_id = %s", (order['order_id'],))
